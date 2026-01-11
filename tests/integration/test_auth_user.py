@@ -180,7 +180,7 @@ def test_expired_token_callback(client):
         expires_delta=timedelta(seconds=-1)
     )
     response = client.get(
-        "/test/protected",
+        "/debug/protected-route",
         headers={"Authorization": f"Bearer {expired_token}"}
     )
 
@@ -190,7 +190,7 @@ def test_expired_token_callback(client):
 
 def test_protected_with_access_token(client, create_user_jwts):
     response = client.get(
-        "/test/protected", 
+        "/debug/protected-route", 
         headers={"Authorization": f"Bearer {create_user_jwts[0]}"}
     )
     
@@ -198,7 +198,7 @@ def test_protected_with_access_token(client, create_user_jwts):
     assert response.json['message'] == "This is a protected endpoint."
 
 def test_protected_without_token(client):
-    response = client.get("/test/protected")
+    response = client.get("/debug/protected-route")
 
     assert response.status_code == 401
     assert response.json['error'] == "authorization_required"
@@ -209,7 +209,7 @@ def test_fresh_protected_with_non_fresh_token(client, create_user_jwts):
         headers={"Authorization": f"Bearer {create_user_jwts[1]}"}
     )
     response = client.get(
-        "/test/fresh-protected", 
+        "/debug/fresh-protected-route", 
         headers={"Authorization": f"Bearer {response.json['access_token']}"}
     )
 
@@ -218,7 +218,7 @@ def test_fresh_protected_with_non_fresh_token(client, create_user_jwts):
 
 def test_fresh_protected_with_fresh_token(client, create_user_jwts):
     response = client.get(
-        "/test/fresh-protected", 
+        "/debug/fresh-protected-route", 
         headers={"Authorization": f"Bearer {create_user_jwts[0]}"}
     )
 
@@ -227,7 +227,7 @@ def test_fresh_protected_with_fresh_token(client, create_user_jwts):
 
 def test_get_user_details(client, create_user_details):
     response = client.get(
-        "/users/1",  # assume user id is 1
+        "/debug/users/1",  # assume user id is 1
     )
 
     assert response.status_code == 200
@@ -238,7 +238,7 @@ def test_get_user_details(client, create_user_details):
 
 def test_get_user_details_missing(client):
     response = client.get(
-        "/users/23",
+        "/debug/users/23",
     )
 
     assert response.status_code == 404

@@ -3,10 +3,11 @@ from dotenv import load_dotenv
 
 from api.config import Config
 from api.extensions import api, jwt, db, migrate
-from api.resources.test import blp as TestBlueprint
+from api.resources.debug import blp as DebugBlueprint
 from api.resources.user import blp as UserBlueprint
 from api.resources.auth import blp as AuthBlueprint
 from api import jwt_callbacks
+from api.celery_app import init_celery
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -24,6 +25,8 @@ def create_app(test_config=None):
 
     api.register_blueprint(AuthBlueprint)
     api.register_blueprint(UserBlueprint)
-    api.register_blueprint(TestBlueprint)
+    api.register_blueprint(DebugBlueprint)
 
+    init_celery(app)
+    
     return app

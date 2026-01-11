@@ -9,3 +9,4 @@ passlib
 redis
 requests
 psycopg2
+celery

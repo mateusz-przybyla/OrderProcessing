@@ -155,28 +155,28 @@
 			]
 		},
 		{
-			"name": "Test (dev)",
+			"name": "Debug",
 			"item": [
 				{
-					"name": "/test/guest - test guest endpoint",
+					"name": "/debug/guest-route - test guest endpoint",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/test/guest",
+							"raw": "{{url}}/debug/guest-route",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"test",
-								"guest"
+								"debug",
+								"guest-route"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "/test/protected - test protected endpoint",
+					"name": "/debug/protected-route - test protected endpoint",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -191,20 +191,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/test/protected",
+							"raw": "{{url}}/debug/protected-route",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"test",
-								"protected"
+								"debug",
+								"protected-route"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "/test/fresh-protected - test fresh protected endpoint",
+					"name": "/debug/fresh-protected-route - test fresh protected endpoint",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -219,29 +219,30 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/test/fresh-protected",
+							"raw": "{{url}}/debug/fresh-protected-route",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"test",
-								"fresh-protected"
+								"debug",
+								"fresh-protected-route"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "/users/<id> - get user by id",
+					"name": "/debug/users/<id> - get user by id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/users/1",
+							"raw": "{{url}}/debug/users/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
+								"debug",
 								"users",
 								"1"
 							]
@@ -250,7 +251,7 @@
 					"response": []
 				},
 				{
-					"name": "/users/<id> - delete user by id",
+					"name": "/debug/users/<id> - delete user by id",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -258,13 +259,64 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/users/8",
+							"raw": "{{url}}/debug/users/8",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
+								"debug",
 								"users",
 								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/debug/celery/test-task",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/debug/celery/test-task",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"debug",
+								"celery",
+								"test-task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/debug/celery/retry-task",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/debug/celery/test-retry?should_fail=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"debug",
+								"celery",
+								"test-retry"
+							],
+							"query": [
+								{
+									"key": "should_fail",
+									"value": "1"
+								}
 							]
 						}
 					},
