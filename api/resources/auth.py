@@ -1,3 +1,4 @@
+from flask import current_app
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
 from passlib.hash import pbkdf2_sha256 as sha256
@@ -9,6 +10,7 @@ from api.extensions import db
 from api.models.user import UserModel
 from api.schemas.user import UserRegisterSchema, UserLoginSchema
 from api.services.blocklist import add_jti_to_blocklist
+from api.tasks import email as email_tasks
 
 blp = Blueprint("auth", __name__, description="Endpoints for user registration and authentication.")
 
@@ -32,6 +34,14 @@ class UserRegister(MethodView):
             db.session.commit()
         except SQLAlchemyError:
             abort(500, message="An error occurred while creating the user.")
+
+        try:
+            email_tasks.send_user_registration_email.delay(user.email, user.username)
+        except Exception as e:
+            current_app.logger.error(
+                "Failed to enqueue async task for sending registration email.",
+                extra={"error": str(e), "user_email": user.email}
+            )
 
         return {"message": "User created successfully."}
         
