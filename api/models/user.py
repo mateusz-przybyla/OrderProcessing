@@ -15,5 +15,13 @@ class UserModel(db.Model):
         onupdate=db.func.now(), 
     )
 
+    # Relationships
+    orders = db.relationship(
+        "OrderModel", 
+        back_populates="user", 
+        lazy="dynamic", 
+        cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"<User id={self.id} username={self.username} email={self.email}>"
