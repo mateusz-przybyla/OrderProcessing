@@ -6,6 +6,7 @@ from api.extensions import api, jwt, db, migrate
 from api.resources.debug import blp as DebugBlueprint
 from api.resources.user import blp as UserBlueprint
 from api.resources.auth import blp as AuthBlueprint
+from api.resources.order import blp as OrderBlueprint
 from api import jwt_callbacks
 from api.celery_app import init_celery
 
@@ -26,6 +27,7 @@ def create_app(test_config=None):
     api.register_blueprint(AuthBlueprint)
     api.register_blueprint(UserBlueprint)
     api.register_blueprint(DebugBlueprint)
+    api.register_blueprint(OrderBlueprint)
 
     init_celery(app)
     
