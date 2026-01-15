@@ -17,7 +17,7 @@ from api.schemas import (
 
 blp = Blueprint("orders", __name__, description="Order processing endpoints")
 
-@blp.route("/orders")
+@blp.route("/api/orders")
 class OrdersResource(MethodView):
     @jwt_required()
     @blp.arguments(OrderCreateSchema)

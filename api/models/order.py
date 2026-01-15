@@ -14,7 +14,6 @@ class OrderModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(db.String(36), unique=True, nullable=False, index=True)
-
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     status = db.Column(
@@ -23,7 +22,6 @@ class OrderModel(db.Model):
         nullable=False,
         index=True
     )
-
     total_amount = db.Column(db.Numeric(10, 2), nullable=False)
 
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
@@ -39,6 +37,12 @@ class OrderModel(db.Model):
         "OrderItemModel", 
         back_populates="order", 
         cascade="all, delete-orphan"
+    )
+    events = db.relationship(
+        "OrderEventModel",
+        back_populates="order",
+        cascade="all, delete-orphan",
+        order_by="OrderEventModel.created_at"
     )
 
     def __repr__(self):

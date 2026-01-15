@@ -36,7 +36,9 @@ Event-driven Order Processing API built with Flask, Celery, Redis and JWT, featu
 
 ---
 
-## Database Schema
+## Database schema
+
+![](/readme/database-schema.png)
 
 ---
 
