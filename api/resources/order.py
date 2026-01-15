@@ -8,7 +8,9 @@ from api.extensions import db
 from api.models import (
     OrderModel,
     OrderStatus,
-    OrderItemModel
+    OrderItemModel,
+    OrderEventModel,
+    OrderEventType
 )
 from api.schemas import (
     OrderCreateSchema, 
@@ -52,6 +54,13 @@ class OrdersResource(MethodView):
                     unit_price=item['unit_price']
                 )
             )
+
+        db.session.add(
+            OrderEventModel(
+                order_id=order.id,
+                event_type=OrderEventType.ORDER_CREATED
+            )
+        )
 
         db.session.commit()
 
