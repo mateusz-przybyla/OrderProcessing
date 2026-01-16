@@ -3,6 +3,8 @@ from decimal import Decimal
 from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_smorest import Blueprint
+from flask import current_app
+from redis.exceptions import RedisError
 
 from api.extensions import db
 from api.models import (
@@ -16,6 +18,7 @@ from api.schemas import (
     OrderCreateSchema, 
     OrderResponseSchema
 )
+from api.tasks import order as order_tasks
 
 blp = Blueprint("orders", __name__, description="Order processing endpoints")
 
@@ -25,9 +28,8 @@ class OrdersResource(MethodView):
     @blp.arguments(OrderCreateSchema)
     @blp.response(201, OrderResponseSchema)
     def post(self, data):
-        """
-        Create new order
-        """
+        """Create new order and enqueue async processing task."""
+
         user_id = get_jwt_identity()
 
         total_amount = sum(
@@ -54,14 +56,26 @@ class OrdersResource(MethodView):
                     unit_price=item['unit_price']
                 )
             )
-
         db.session.add(
             OrderEventModel(
                 order_id=order.id,
                 event_type=OrderEventType.ORDER_CREATED
             )
         )
-
+        db.session.add(
+            OrderEventModel(
+                order_id=order.id,
+                event_type=OrderEventType.ORDER_ENQUEUED,
+            )
+        )
         db.session.commit()
+
+        try:
+            order_tasks.process_order_task.delay(order.id)
+        except RedisError as e:
+            current_app.logger.error(
+                "Failed to enqueue async task for order processing.",
+                extra={"error": str(e), "order_id": order.id}
+            )
 
         return order
