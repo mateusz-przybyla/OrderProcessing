@@ -12,9 +12,6 @@ class OrderCreateSchema(Schema):
 
 class OrderResponseSchema(Schema):
     uuid = fields.String(dump_only=True)
-    status = fields.Method("get_status", dump_only=True)
+    status = fields.String(attribute="status_value", dump_only=True)
     total_amount = fields.Decimal(as_string=True, dump_only=True)
     created_at = fields.DateTime(dump_only=True)
-
-    def get_status(self, obj):
-        return obj.status.value
