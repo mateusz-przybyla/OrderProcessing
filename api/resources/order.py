@@ -71,7 +71,7 @@ class OrdersResource(MethodView):
         db.session.commit()
 
         try:
-            order_tasks.process_order_task.delay(order.id)
+            order_tasks.process_order_task.delay(order.id, data.get('error'))
         except RedisError as e:
             current_app.logger.error(
                 "Failed to enqueue async task for order processing.",

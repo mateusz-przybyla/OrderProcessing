@@ -4,6 +4,7 @@ from marshmallow.validate import Length
 from api.schemas.order_item import OrderItemSchema
 
 class OrderCreateSchema(Schema):
+    error = fields.String(required=False, allow_none=True) # new field to simulate errors
     items = fields.List(
         fields.Nested(OrderItemSchema),
         required=True,
