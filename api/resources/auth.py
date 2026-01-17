@@ -5,10 +5,11 @@ from passlib.hash import pbkdf2_sha256 as sha256
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt, get_jwt_identity
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime, timezone
+from redis.exceptions import RedisError
 
 from api.extensions import db
-from api.models.user import UserModel
-from api.schemas.user import UserRegisterSchema, UserLoginSchema
+from api.models import UserModel
+from api.schemas import UserRegisterSchema, UserLoginSchema
 from api.services.blocklist import add_jti_to_blocklist
 from api.tasks import email as email_tasks
 
@@ -37,7 +38,7 @@ class UserRegister(MethodView):
 
         try:
             email_tasks.send_user_registration_email.delay(user.email, user.username)
-        except Exception as e:
+        except RedisError as e:
             current_app.logger.error(
                 "Failed to enqueue async task for sending registration email.",
                 extra={"error": str(e), "user_email": user.email}
