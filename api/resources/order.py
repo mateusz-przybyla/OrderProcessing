@@ -19,6 +19,11 @@ from api.schemas import (
     OrderResponseSchema
 )
 from api.tasks import order as order_tasks
+from api.metrics.orders import (
+    orders_created_total,
+    orders_total_amount_sum,
+    orders_items_total
+)
 
 blp = Blueprint("orders", __name__, description="Order processing endpoints")
 
@@ -77,5 +82,9 @@ class OrdersResource(MethodView):
                 "Failed to enqueue async task for order processing.",
                 extra={"error": str(e), "order_id": order.id}
             )
+
+        orders_created_total.inc()
+        orders_total_amount_sum.inc(float(total_amount))
+        orders_items_total.inc(len(data['items']))
 
         return order

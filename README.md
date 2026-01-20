@@ -1,14 +1,14 @@
 # OrderProcessing
 
 [in progress]\
-Event-driven Order Processing API built with Flask, Celery, Redis and JWT, featuring asynchronous workflows, audit event logging and full observability via Prometheus and Grafana.
+A production-style REST API for user registration, authentication and asynchronous order processing with background workers, event tracking and Prometheus metrics.
 
 ---
 
 ## Table of Contents
 
 - [Features](#features)
-- [Requirements](#requirements)
+- [Tech Stack](#tech-stack)
 - [Installation](#installation)
     - [Docker setup](#docker-setup)
 - [Database Schema](#database-schema)
@@ -16,17 +16,39 @@ Event-driven Order Processing API built with Flask, Celery, Redis and JWT, featu
 - [Endpoints](#endpoints)
     - [Auth](#auth)
     - [User](#user)
-    - ...
-    - [Developer endpoints](#developer-endpoints-optional)
+    - [Order](#order)
+    - [Debug](#debug)
 - [Validation and Errors](#validation-and-errors)
 - [Testing](#testing)
 - [Postman Collection](#postman-collection)
 
 ## Features
 
+- User registration & authentication (JWT)
+- Create orders with multiple items
+- Asynchronous order processing using **Celery** + **Redis**
+- Order lifecycle tracked via **Order Events**
+- Order statuses: `pending`, `processing`, `completed`, `failed`, `cancelled`
+- Background email sending (Mailgun)
+- Prometheus metrics (`/metrics`)
+- Database migrations (Alembic)
+- Clean domain separation: models, services, tasks, resources
+
 ---
 
-## Requirements
+## Tech Stack
+
+- Python 3.13
+- Flask + Flask-Smorest
+- SQLAlchemy + Alembic
+- Redis + Celery
+- MySQL
+- Mailgun
+- JWT (flask-jwt-extended)
+- Prometheus (metrics)
+- Docker
+
+See [requirements.txt](requirements.txt) and [requirements-dev.txt](requirements-dev.txt).
 
 ---
 
@@ -52,7 +74,9 @@ Event-driven Order Processing API built with Flask, Celery, Redis and JWT, featu
 
 ### User
 
-### Developer Endpoints (optional)
+### Order
+
+### Debug
 
 ---
 

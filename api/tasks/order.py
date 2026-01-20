@@ -1,4 +1,3 @@
-from dbm import error
 import time
 
 from api.extensions import db

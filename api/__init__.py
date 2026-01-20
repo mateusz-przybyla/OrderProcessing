@@ -9,6 +9,7 @@ from api.resources.auth import blp as AuthBlueprint
 from api.resources.order import blp as OrderBlueprint
 from api import jwt_callbacks
 from api.celery_app import init_celery
+from api.extensions import metrics
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -30,5 +31,6 @@ def create_app(test_config=None):
     api.register_blueprint(OrderBlueprint)
 
     init_celery(app)
+    metrics.init_app(app)
     
     return app
