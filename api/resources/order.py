@@ -2,7 +2,7 @@ import uuid
 from decimal import Decimal
 from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_smorest import Blueprint
+from flask_smorest import Blueprint, abort
 from flask import current_app
 from redis.exceptions import RedisError
 
@@ -16,7 +16,8 @@ from api.models import (
 )
 from api.schemas import (
     OrderCreateSchema, 
-    OrderResponseSchema
+    OrderResponseSchema,
+    OrderStatusResponseSchema
 )
 from api.tasks import order as order_tasks
 from api.metrics.orders import (
@@ -31,7 +32,7 @@ blp = Blueprint("orders", __name__, description="Order processing endpoints")
 class OrdersResource(MethodView):
     @jwt_required()
     @blp.arguments(OrderCreateSchema)
-    @blp.response(201, OrderResponseSchema)
+    @blp.response(201, OrderResponseSchema, description="Create a new order.")
     def post(self, data):
         """Create new order and enqueue async processing task."""
 
@@ -86,5 +87,25 @@ class OrdersResource(MethodView):
         orders_created_total.inc()
         orders_total_amount_sum.inc(float(total_amount))
         orders_items_total.inc(len(data['items']))
+
+        return order
+    
+@blp.route("/api/orders/<string:uuid>")
+class OrderStatusResource(MethodView):
+    @jwt_required()
+    @blp.response(200, OrderStatusResponseSchema, description="Get order status and details.")
+    def get(self, uuid):
+        """Get order status and details"""
+
+        user_id = get_jwt_identity()
+
+        order = (
+            OrderModel.query
+            .filter_by(uuid=uuid, user_id=user_id)
+            .first()
+        )
+
+        if not order:
+            abort(404, message="Order not found")
 
         return order

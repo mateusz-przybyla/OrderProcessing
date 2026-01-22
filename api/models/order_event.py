@@ -30,3 +30,7 @@ class OrderEventModel(db.Model):
 
     def __repr__(self):
         return f"<OrderEvent order_id={self.order_id} event={self.event_type.value}>"
+    
+    @property
+    def event_type_name(self):
+        return self.event_type.value

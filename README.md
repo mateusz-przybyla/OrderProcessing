@@ -1,7 +1,7 @@
 # OrderProcessing
 
 [in progress]\
-A production-style REST API for user registration, authentication and asynchronous order processing with background workers, event tracking and Prometheus metrics.
+A production-style REST API for user registration, authentication and asynchronous order processing with background workers, event tracking and observability stack (Prometheus + Grafana).
 
 ---
 
@@ -30,7 +30,8 @@ A production-style REST API for user registration, authentication and asynchrono
 - Order lifecycle tracked via **Order Events**
 - Order statuses: `pending`, `processing`, `completed`, `failed`, `cancelled`
 - Background email sending (Mailgun)
-- Prometheus metrics (`/metrics`)
+- Prometheus metrics exposed at `/metrics`
+- Monitoring dashboards in **Grafana**
 - Database migrations (Alembic)
 - Clean domain separation: models, services, tasks, resources
 
@@ -45,7 +46,7 @@ A production-style REST API for user registration, authentication and asynchrono
 - MySQL
 - Mailgun
 - JWT (flask-jwt-extended)
-- Prometheus (metrics)
+- Prometheus + Grafana (monitoring)
 - Docker
 
 See [requirements.txt](requirements.txt) and [requirements-dev.txt](requirements-dev.txt).
@@ -89,3 +90,6 @@ See [requirements.txt](requirements.txt) and [requirements-dev.txt](requirements
 ---
 
 ## Postman Collection
+
+A Postman collection with all endpoints and environment variables is included in the repository `postman/`.
+Import it into Postman to test functionality.
